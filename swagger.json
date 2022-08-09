@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "YorkU API",
-    "description": ""
+    "title": "YorkU Unofficial API",
+    "description": "Open source, unofficial York University API at https://github.com/isaackogan/YorkUAPI based off open source YorkU scraping software at https://github.com/isaackogan/YorkUAPI."
   },
   "basePath": "/",
   "tags": [
@@ -27,22 +27,13 @@
     "application/json"
   ],
   "paths": {
-    "/v1/courses/info": {
+    "/v1/courses/info/site_index": {
       "get": {
         "tags": ["Course Website"],
-        "parameters": [
-            {
-              "in": "query",
-              "name": "code",
-              "type": "string",
-              "description": "The course code in \"SC/MATH 1520 3.00\" format",
-              "required": true,
-              "allowEmptyValue": false
-            }
-          ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "Successfully found course info"
+            "description": "Successfully retrieved the course site index"
           },
           "404": {
             "$ref": "#/definitions/Error"
@@ -53,13 +44,22 @@
         }
       }
     },
-    "/v1/courses/info/site_index": {
+    "/v1/courses/info": {
       "get": {
         "tags": ["Course Website"],
-        "parameters": [],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "type": "string",
+            "description": "The course code in \"SC/MATH 1520 3.00\" format",
+            "required": true,
+            "allowEmptyValue": false
+          }
+        ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved the course site index"
+            "description": "Successfully found course info"
           },
           "404": {
             "$ref": "#/definitions/Error"
