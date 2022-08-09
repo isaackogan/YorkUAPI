@@ -1,0 +1,263 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "YorkU API",
+    "description": ""
+  },
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Course Website",
+      "description": "Information about the course website"
+    },
+    {
+      "name": "Course Index",
+      "description": "Information from the course database index"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/courses/info": {
+      "get": {
+        "tags": ["Course Website"],
+        "parameters": [
+            {
+              "in": "query",
+              "name": "code",
+              "type": "string",
+              "description": "The course code in \"SC/MATH 1520 3.00\" format",
+              "required": true,
+              "allowEmptyValue": false
+            }
+          ],
+        "responses": {
+          "200": {
+            "description": "Successfully found course info"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/info/site_index": {
+      "get": {
+        "tags": ["Course Website"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the course site index"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/index/periods": {
+      "get": {
+        "description": "Get all periods on the YorkU Course Website",
+        "tags": ["Course Index"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved course periods"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/index/{period}": {
+      "get": {
+        "description": "Get all courses in a given term period",
+        "tags": ["Course Index"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "period",
+            "type": "string",
+            "description": "Term period in which to index for courses",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved courses"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/index/{period}/faculties": {
+      "get": {
+        "description": "Get all faculties in a given term period",
+        "tags": ["Course Index"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "period",
+            "type": "string",
+            "description": "Term period in which to index for courses",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved course faculties"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/index/{period}/{faculty}": {
+      "get": {
+        "description": "Get all courses offered by a given faculty",
+        "tags": ["Course Index"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "period",
+            "type": "string",
+            "description": "Term period in which to index for courses",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "faculty",
+            "type": "string",
+            "description": "Faculty in which to index for courses",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved courses"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/index/{period}/{faculty}/subjects": {
+      "get": {
+        "description": "Get all subjects in a given faculty",
+        "tags": ["Course Index"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "period",
+            "type": "string",
+            "description": "Term period in which to index for courses",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "faculty",
+            "type": "string",
+            "description": "Faculty in which to index for courses",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved course subjects"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/index/{period}/{faculty}/{subject}": {
+      "get": {
+        "description": "Get all courses offered on a given subject",
+        "tags": ["Course Index"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "period",
+            "type": "string",
+            "description": "Term period in which to index for courses",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "faculty",
+            "type": "string",
+            "description": "Faculty in which to index for courses",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "subject",
+            "type": "string",
+            "description": "Subject in which to index for courses",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved courses"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Error": {
+      "properties": {
+        "error": {
+          "description": "An error has occurred.",
+          "type": "object",
+          "example": {
+            "error": "Failed to retrieve data because I'm a person, you're the API."
+          }
+        }
+      }
+    }
+  }
+}
