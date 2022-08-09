@@ -8,14 +8,24 @@ const v1Router = require("./versions/v1/router");
 const config = require("./config.json");
 const swagger = require("swagger-ui-express");
 const redis = require("redis");
+const { rateLimit } = require('express-rate-limit');
 
-app.redis = redis.createClient({
-    "url": `redis://default:${config.password}@${config.host}:${config.port}`
-})
+app.redis = redis.createClient({"url": `redis://default:${config.password}@${config.host}:${config.port}`});
 
 app.redis.connect().then(() => {
     Logger.INFO("Redis successfully connected")
 })
+
+/**
+ * API Rate Limit
+ */
+const rateLimitMinute = rateLimit({
+    windowMs: 60 * 1000,
+    max: 30,
+    message: {
+       "error": "Too many requests. Try again later."
+    }
+});
 
 /**
  * CORS Settings
@@ -31,7 +41,7 @@ app.options("*", (req, res) => {
  * Log Requests
  */
 app.use((req, res, next) => {
-    res.on("finish", () => Logger.INFO("%s - \"SIGN %s\"", res.statusCode, req.ip.replaceAll("::ffff:", ""), req.path));
+    res.on("finish", () => Logger.INFO("%s - \"GET %s\"", res.statusCode, req.ip.replaceAll("::ffff:", ""), req.url));
     next();
 });
 
@@ -39,7 +49,7 @@ app.use(require("cors")());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use('/docs', swagger.serve, swagger.setup(require("./swagger.json"), {customCss: '.swagger-ui .topbar { display: none }', customSiteTitle: "TikTok Utilities",}));
-app.use("/v1", v1Router);
+app.use("/v1", rateLimitMinute, v1Router);
 app.get("/", (req, res) => { res.redirect("/docs") })
 app.all('*', (req, res) => { res.status(404).json({ error: "Invalid Route" }); });
 

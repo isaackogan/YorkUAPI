@@ -24,7 +24,7 @@ router.get("/", async (req, res) => {
     );
 
     if (!result) {
-        return res.status(404).json({"error": "Could not find the requested course"});
+        return res.status(404).json({"error": "Could not find the requested course."});
     }
 
     return res.json(JSON.parse(result));

@@ -38,7 +38,7 @@ router.get("/:period", async (req, res) => {
     );
 
     if (!result) {
-        return res.status(404).json({"error": "Could not find the requested course"});
+        return res.status(404).json({"error": "Could not find the requested course."});
     }
 
     return res.json(JSON.parse(result));
@@ -53,7 +53,7 @@ router.get("/:period/faculties", async (req, res) => {
     );
 
     if (!result) {
-        return res.status(404).json({"error": "Could not find the requested faculties"});
+        return res.status(404).json({"error": "Could not find the requested faculties."});
     }
 
     return res.json(JSON.parse(result));
@@ -69,7 +69,7 @@ router.get("/:period/:faculty", async (req, res) => {
     );
 
     if (!result) {
-        return res.status(404).json({"error": "Could not find the requested courses"});
+        return res.status(404).json({"error": "Could not find the requested courses."});
     }
 
     return res.json(JSON.parse(result));
@@ -84,7 +84,7 @@ router.get("/:period/:faculty/subjects", async (req, res) => {
     );
 
     if (!result) {
-        return res.status(404).json({"error": "Could not find the requested subjects"});
+        return res.status(404).json({"error": "Could not find the requested subjects."});
     }
 
     return res.json(JSON.parse(result));
@@ -100,7 +100,7 @@ router.get("/:period/:faculty/:subject", async (req, res) => {
     );
 
     if (!result) {
-        return res.status(404).json({"error": "Could not find the requested courses"});
+        return res.status(404).json({"error": "Could not find the requested courses."});
     }
 
     return res.json(JSON.parse(result));
