@@ -4,6 +4,19 @@ const tools = require("../../../../../modules/tools");
 
 
 /**
+ * Course Site Index
+ */
+router.get("/site_index", async (req, res) => {
+    let result = await req.app.redis.get("yorku:course_site_index");
+
+    if (!result) {
+        return res.status(500).json({"error": "Site index was null/invalid. Try again later."});
+    }
+
+    return res.json(JSON.parse(result));
+});
+
+/**
  * Course Index by All
  */
 router.get("/", async (req, res) => {
@@ -59,6 +72,22 @@ router.get("/:period/faculties", async (req, res) => {
     return res.json(JSON.parse(result));
 });
 
+
+
+/**
+ * Instructor Info
+ */
+router.get("/:period/instructors", async (req, res) => {
+    let result = await req.app.redis.get(
+        ["yorku:instructor_list", tools.redifyName(tools.cleanRedis(req.params.period))].join(":")
+    );
+
+    if (!result) {
+        return res.status(404).json({"error": "Could not find the requested resource."});
+    }
+
+    return res.json(JSON.parse(result));
+});
 
 /**
  * Course Index by Faculty

@@ -3,13 +3,17 @@
   "info": {
     "version": "1.0.0",
     "title": "YorkU Unofficial API",
-    "description": "Open source, unofficial York University API at https://github.com/isaackogan/YorkUAPI based off open source YorkU scraping software at https://github.com/isaackogan/YorkUAPI."
+    "description": "Open source, unofficial York University API at https://github.com/isaackogan/YorkUAPI. Data collection is not open source for ego-bruising purposes."
   },
   "basePath": "/",
   "tags": [
     {
-      "name": "Course Website",
-      "description": "Information about the course website"
+      "name": "General Information",
+      "description": "General information scraped off the YorkU website"
+    },
+    {
+      "name": "Course Information",
+      "description": "Information about specific courses"
     },
     {
       "name": "Course Index",
@@ -27,9 +31,44 @@
     "application/json"
   ],
   "paths": {
-    "/v1/courses/info/site_index": {
+    "/v1/main/dine/vendors": {
       "get": {
-        "tags": ["Course Website"],
+        "description": "Get information about the vendors at YorkU and their respective schedules",
+        "tags": ["General Information"],
+        "responses": {
+          "200": {
+            "description": "Successfully found dining schedules/information"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/main/api/about": {
+      "get": {
+        "tags": ["General Information"],
+        "description": "Get information about this API",
+        "responses": {
+          "200": {
+            "description": "Successfully retrieve API information"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/index/site_index": {
+      "get": {
+        "description": "Get an index of the course website at https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm",
+        "tags": ["Course Index"],
         "parameters": [],
         "responses": {
           "200": {
@@ -44,22 +83,72 @@
         }
       }
     },
-    "/v1/courses/info": {
+    "/v1/courses/info/periods": {
       "get": {
-        "tags": ["Course Website"],
+        "description": "Get the period names for course schedules",
+        "tags": ["Course Information"],
+        "responses": {
+          "200": {
+            "description": "Successfully found the periods for use in course schedule lookups"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/info/{code}/description": {
+      "get": {
+        "description": "Get the description for a given course",
+        "tags": ["Course Information"],
         "parameters": [
           {
-            "in": "query",
+            "in": "path",
             "name": "code",
             "type": "string",
-            "description": "The course code in \"SC/MATH 1520 3.00\" format",
-            "required": true,
-            "allowEmptyValue": false
+            "description": "Qualified course code in \"SC-MATH-1520-3.00\" format",
+            "required": true
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully found course info"
+            "description": "Successfully retrieved course description"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/info/{period}/{code}/schedule": {
+      "get": {
+        "description": "Get the schedule for a given course (must be running currently)",
+        "tags": ["Course Information"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "period",
+            "type": "string",
+            "description": "Period in which to index for courses",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "code",
+            "type": "string",
+            "description": "Qualified course code in \"SC-MATH-1520-3.00\" format",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved courses"
           },
           "404": {
             "$ref": "#/definitions/Error"
@@ -130,6 +219,32 @@
         "responses": {
           "200": {
             "description": "Successfully retrieved course faculties"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/courses/index/{period}/instructors": {
+      "get": {
+        "description": "Get all faculty for a given course period",
+        "tags": ["Course Index"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "period",
+            "type": "string",
+            "description": "Term period in which to search for teachers",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved teachers"
           },
           "404": {
             "$ref": "#/definitions/Error"

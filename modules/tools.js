@@ -8,10 +8,18 @@ function redifyName(name) {
 
 function sanitizeRedisInput(input) {
     return (input || "")
-        .replaceAll(":", "");
+        .replaceAll(":", "")
+        .replaceAll("eval", "")
+        .replaceAll(";", "");
+}
+
+function sanitizeCSSFile(input) {
+    return (input || "")
+        .replaceAll(/[\n\r]/g, "")
 }
 
 module.exports = {
     redifyName: redifyName,
-    cleanRedis: sanitizeRedisInput
+    cleanRedis: sanitizeRedisInput,
+    cleanCSS: sanitizeCSSFile
 }
