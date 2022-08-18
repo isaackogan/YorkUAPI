@@ -26,7 +26,7 @@ const rateLimitMinute = rateLimit({
     windowMs: 60 * 1000,
     max: 300,
     message: {
-       "error": "Too many requests. Try again later."
+       "error": "Too many requests. Try again later." // TODO test if this works with ip fwding rn
     }
 });
 
