@@ -21,7 +21,6 @@
     }
   ],
   "schemes": [
-    "http",
     "https"
   ],
   "consumes": [
@@ -31,13 +30,30 @@
     "application/json"
   ],
   "paths": {
-    "/v1/main/dine/vendors": {
+    "/v1/main/home/dine-vendors": {
       "get": {
         "description": "Get information about the vendors at YorkU and their respective schedules",
         "tags": ["General Information"],
         "responses": {
           "200": {
             "description": "Successfully found dining schedules/information"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "/v1/main/home/building-codes": {
+      "get": {
+        "description": "Get the list of buildings acronyms and their respective names",
+        "tags": ["General Information"],
+        "responses": {
+          "200": {
+            "description": "Successfully found building acronyms"
           },
           "404": {
             "$ref": "#/definitions/Error"
@@ -100,22 +116,22 @@
         }
       }
     },
-    "/v1/courses/info/{code}/description": {
+    "/v1/courses/info/{period}/codes": {
       "get": {
-        "description": "Get the description for a given course",
+        "description": "Get the list of course codes we have schedules indexed for",
         "tags": ["Course Information"],
         "parameters": [
           {
             "in": "path",
-            "name": "code",
+            "name": "period",
             "type": "string",
-            "description": "Qualified course code in \"SC-MATH-1520-3.00\" format",
+            "description": "Period in which to index for course codes",
             "required": true
           }
         ],
         "responses": {
           "200": {
-            "description": "Successfully retrieved course description"
+            "description": "Successfully retrieved course codes"
           },
           "404": {
             "$ref": "#/definitions/Error"

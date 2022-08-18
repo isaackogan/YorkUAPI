@@ -32,6 +32,26 @@ router.get("/:period/:code/schedule", async (req, res) => {
     return res.json(JSON.parse(result));
 });
 
+/**
+ * Course Periods
+ */
+router.get("/:period/codes", async (req, res) => {
+    let name = `yorku:course_schedule:${tools.cleanRedis(req.params.period)}:`
+    let keys = await req.app.redis.keys(`${name}*`)
+    let result = []
+
+    for (let i=0; i < keys.length; i++) {
+        result.push(keys[i].replace(name, ""))
+    }
+
+    if (!result) {
+        return res.status(404).json({"error": "Could not find the requested course list."});
+    }
+
+    return res.json(result);
+});
+
+
 
 /**
  * Get description
