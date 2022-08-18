@@ -24,7 +24,7 @@ app.redis.connect().then(() => {
  */
 const rateLimitMinute = rateLimit({
     windowMs: 60 * 1000,
-    max: 30,
+    max: 300,
     message: {
        "error": "Too many requests. Try again later."
     }
@@ -44,7 +44,7 @@ app.options("*", (req, res) => {
  * Log Requests
  */
 app.use((req, res, next) => {
-    res.on("finish", () => Logger.INFO("%s - \"GET %s\"", res.statusCode, req.ip.replaceAll("::ffff:", ""), req.url));
+    res.on("finish", () => Logger.INFO("%s - \"GET %s\"", res.statusCode, req.header("cf-connecting-ip") || req.ip.replaceAll("::ffff:", ""), req.url));
     next();
 });
 
@@ -65,4 +65,4 @@ app.use("/v1", rateLimitMinute, v1Router);
 app.get("/", (req, res) => { res.redirect("/docs") })
 app.all('*', (req, res) => { res.status(404).json({ error: "Invalid Route" }); });
 
-server.listen(PORT, "127.0.0.1", () => Logger.INFO(`Listening on port ${PORT} for connections!`));
+server.listen(PORT,  () => Logger.INFO(`Listening on port ${PORT} for connections!`));
