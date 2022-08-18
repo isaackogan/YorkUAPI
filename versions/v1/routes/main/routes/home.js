@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const tools = require("../../../../../modules/tools");
+const building_images = require("../../../../../private/building_images.json");
 
 /**
  * Dining Data
@@ -26,6 +26,15 @@ router.get("/building-codes", async (req, res) => {
     }
 
     return res.json(JSON.parse(result));
+});
+
+
+/**
+ * Building images
+ */
+router.get("/building-images", async (req, res) => {
+    let image_url = building_images[req.query.code] || building_images["default"]
+    return res.redirect(image_url);
 });
 
 module.exports = router;

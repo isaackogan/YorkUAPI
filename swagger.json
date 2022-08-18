@@ -33,7 +33,9 @@
     "/v1/main/home/dine-vendors": {
       "get": {
         "description": "Get information about the vendors at YorkU and their respective schedules",
-        "tags": ["General Information"],
+        "tags": [
+          "General Information"
+        ],
         "responses": {
           "200": {
             "description": "Successfully found dining schedules/information"
@@ -50,7 +52,9 @@
     "/v1/main/home/building-codes": {
       "get": {
         "description": "Get the list of buildings acronyms and their respective names",
-        "tags": ["General Information"],
+        "tags": [
+          "General Information"
+        ],
         "responses": {
           "200": {
             "description": "Successfully found building acronyms"
@@ -64,9 +68,36 @@
         }
       }
     },
+    "/v1/main/home/building-images": {
+      "get": {
+        "description": "Get a building image given its code",
+        "tags": [
+          "General Information"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found the building image"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "type": "string",
+            "description": "Building code to get the image for",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v1/main/api/about": {
       "get": {
-        "tags": ["General Information"],
+        "tags": [
+          "General Information"
+        ],
         "description": "Get information about this API",
         "responses": {
           "200": {
@@ -84,7 +115,9 @@
     "/v1/courses/index/site_index": {
       "get": {
         "description": "Get an index of the course website at https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm",
-        "tags": ["Course Index"],
+        "tags": [
+          "Course Index"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -102,7 +135,9 @@
     "/v1/courses/info/periods": {
       "get": {
         "description": "Get the period names for course schedules",
-        "tags": ["Course Information"],
+        "tags": [
+          "Course Information"
+        ],
         "responses": {
           "200": {
             "description": "Successfully found the periods for use in course schedule lookups"
@@ -119,7 +154,9 @@
     "/v1/courses/info/{period}/codes": {
       "get": {
         "description": "Get the list of course codes we have schedules indexed for",
-        "tags": ["Course Information"],
+        "tags": [
+          "Course Information"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -145,7 +182,9 @@
     "/v1/courses/info/{period}/{code}/schedule": {
       "get": {
         "description": "Get the schedule for a given course (must be running currently)",
-        "tags": ["Course Information"],
+        "tags": [
+          "Course Information"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -178,7 +217,9 @@
     "/v1/courses/index/periods": {
       "get": {
         "description": "Get all periods on the YorkU Course Website",
-        "tags": ["Course Index"],
+        "tags": [
+          "Course Index"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -196,7 +237,9 @@
     "/v1/courses/index/{period}": {
       "get": {
         "description": "Get all courses in a given term period",
-        "tags": ["Course Index"],
+        "tags": [
+          "Course Index"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -222,7 +265,9 @@
     "/v1/courses/index/{period}/faculties": {
       "get": {
         "description": "Get all faculties in a given term period",
-        "tags": ["Course Index"],
+        "tags": [
+          "Course Index"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -248,7 +293,9 @@
     "/v1/courses/index/{period}/instructors": {
       "get": {
         "description": "Get all faculty for a given course period",
-        "tags": ["Course Index"],
+        "tags": [
+          "Course Index"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -274,7 +321,9 @@
     "/v1/courses/index/{period}/{faculty}": {
       "get": {
         "description": "Get all courses offered by a given faculty",
-        "tags": ["Course Index"],
+        "tags": [
+          "Course Index"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -307,7 +356,9 @@
     "/v1/courses/index/{period}/{faculty}/subjects": {
       "get": {
         "description": "Get all subjects in a given faculty",
-        "tags": ["Course Index"],
+        "tags": [
+          "Course Index"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -340,7 +391,9 @@
     "/v1/courses/index/{period}/{faculty}/{subject}": {
       "get": {
         "description": "Get all courses offered on a given subject",
-        "tags": ["Course Index"],
+        "tags": [
+          "Course Index"
+        ],
         "parameters": [
           {
             "in": "path",
