@@ -2,7 +2,6 @@
   "name": "YorkUAPI",
   "version": "1.0.0",
   "devDependencies": {
-    "cors": "^2.8.5",
     "socket.io": "^4.5.1"
   },
   "dependencies": {
