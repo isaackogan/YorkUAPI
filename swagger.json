@@ -68,6 +68,34 @@
         }
       }
     },
+    "/v1/main/rmp/ratings": {
+      "get": {
+        "description": "Get the RateMyProf rating for a given YorkU Professor",
+        "tags": [
+          "General Information"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully found YorkU Professor"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        },
+        "parameters": [
+          {
+            "in": "body",
+            "name": "professors",
+            "type": "array",
+            "description": "Array of names of the professor in \"First Last\" format",
+            "required": true
+          }
+        ]
+      }
+    },
     "/v1/main/home/building-images": {
       "get": {
         "description": "Get a building image given its code",

@@ -7,7 +7,7 @@ function redifyName(name) {
 }
 
 function sanitizeRedisInput(input) {
-    return (input || "")
+    return (String(input) || "")
         .replaceAll(":", "")
         .replaceAll("eval", "")
         .replaceAll(";", "");
