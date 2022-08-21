@@ -11,6 +11,7 @@ const redis = require("redis");
 const {rateLimit} = require('express-rate-limit');
 const fs = require("fs");
 const tools = require("./modules/tools");
+let rateLimitBlacklist = require("./private/blacklist.json");
 
 app.redis = redis.createClient({"url": `redis://default:${config.password}@${config.host}:${config.port}`});
 
@@ -22,9 +23,15 @@ app.redis.connect().then(() => {
 /**
  * API Rate Limit
  */
+app.set('trust proxy', 1);
 const rateLimitMinute = rateLimit({
     windowMs: 60 * 1000,
-    max: 300,
+    max: (req, _) => {
+        if (rateLimitBlacklist.includes(req.ip)) {
+            return 3;
+        }
+        return 100;
+    },
     message: {
         "error": "Too many requests. Try again later."
     }
@@ -36,7 +43,7 @@ const rateLimitMinute = rateLimit({
 app.options("*", (req, res) => {
     res.header('Access-Control-Allow-Origin', "*")
     res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Authorization, Content-Length, X-Requested-With');
+    res.header('Access-Control-Allow-Headers', 'Authorization, Content-Length, Content-Type, X-Requested-With');
     res.send(200);
 });
 
@@ -44,7 +51,7 @@ app.options("*", (req, res) => {
  * Log Requests
  */
 app.use((req, res, next) => {
-    res.on("finish", () => Logger.INFO("%s - \"%s %s\"", res.statusCode, req.method, req.header("cf-connecting-ip") || req.ip.replaceAll("::ffff:", ""), req.url));
+    res.on("finish", () => Logger.INFO("%s - \"%s %s\"", res.statusCode, req.method, req.ip.replaceAll("::ffff:", ""), req.url));
     next();
 });
 
