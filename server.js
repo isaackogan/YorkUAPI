@@ -18,6 +18,8 @@ app.redis = redis.createClient({"url": `redis://default:${config.password}@${con
 app.use(cors())
 app.redis.connect().then(() => {
     Logger.INFO("Redis successfully connected");
+
+    app.redis.keys("yorku:rmp:William*")
 })
 
 
