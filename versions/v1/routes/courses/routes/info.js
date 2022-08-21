@@ -40,7 +40,7 @@ router.get("/:period/codes", async (req, res) => {
     let keys = await req.app.redis.keys(`${name}*`)
     let result = []
 
-    for (let i=0; i < keys.length; i++) {
+    for (let i = 0; i < keys.length; i++) {
         result.push(keys[i].replace(name, ""))
     }
 
@@ -50,7 +50,6 @@ router.get("/:period/codes", async (req, res) => {
 
     return res.json(result);
 });
-
 
 
 /**
@@ -82,6 +81,52 @@ router.get("/:code/description", async (req, res) => {
         "description": result,
         "historic": historic
     });
+});
+
+function parse(str) {
+    let data = JSON.parse(str).sections;
+    let teachers = {}
+
+    try {
+        for (let [section, secInfo] of Object.entries(data)) {
+            let classes = secInfo["classes"];
+            if (!classes) continue;
+
+            for (let classy of classes) {
+                for (let instructor of classy["instructors"]) {
+                    if (instructor.trim().length < 1) continue;
+                    if (teachers[instructor]) {
+                        teachers[instructor].push(section);
+                    } else {
+                        teachers[instructor] = [section]
+
+                    }
+                }
+            }
+
+        }
+        return teachers;
+    } catch
+        (ex) {
+
+    }
+}
+
+
+router.get("/:period/:code/teachers", async (req, res) => {
+    let result = await req.app.redis.get(
+        ["yorku:course_schedule", tools.cleanRedis(req.params.period), tools.cleanRedis(req.params.code)].join(":")
+    );
+
+    if (!result) {
+        return res.status(404).json({"error": "Could not find the requested courses schedule."});
+    }
+
+    let teachers = parse(result)
+
+    if (teachers) return res.json(teachers);
+    else return res.status(500).json({"error": "Failed to parse course teachers"});
+
 });
 
 

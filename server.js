@@ -8,7 +8,7 @@ const v1Router = require("./versions/v1/router");
 const config = require("./config.json");
 const swagger = require("swagger-ui-express");
 const redis = require("redis");
-const { rateLimit } = require('express-rate-limit');
+const {rateLimit} = require('express-rate-limit');
 const fs = require("fs");
 const tools = require("./modules/tools");
 
@@ -26,7 +26,7 @@ const rateLimitMinute = rateLimit({
     windowMs: 60 * 1000,
     max: 300,
     message: {
-       "error": "Too many requests. Try again later." // TODO test if this works with ip fwding rn
+        "error": "Too many requests. Try again later."
     }
 });
 
@@ -49,20 +49,24 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended: false}));
 
 app.get("/cheese", (req, res) => {
     console.log(app.routes)
 })
 
 app.use('/docs', swagger.serve, swagger.setup(require("./swagger.json"), {
-        customCss: tools.cleanCSS(fs.readFileSync("./private/override.css", {encoding: "utf-8", flag: "r"})),
-        customSiteTitle: "YorkU Unofficial API",
-        customfavIcon: "/public/favicon.ico",
+    customCss: tools.cleanCSS(fs.readFileSync("./private/override.css", {encoding: "utf-8", flag: "r"})),
+    customSiteTitle: "YorkU Unofficial API",
+    customfavIcon: "/public/favicon.ico",
 }));
 app.use("/public", express.static(__dirname + "/public"));
 app.use("/v1", rateLimitMinute, v1Router);
-app.get("/", (req, res) => { res.redirect("/docs") })
-app.all('*', (req, res) => { res.status(404).json({ error: "Invalid Route" }); });
+app.get("/", (req, res) => {
+    res.redirect("/docs")
+})
+app.all('*', (req, res) => {
+    res.status(404).json({error: "Invalid Route"});
+});
 
-server.listen(PORT,  () => Logger.INFO(`Listening on port ${PORT} for connections!`));
+server.listen(PORT, () => Logger.INFO(`Listening on port ${PORT} for connections!`));

@@ -214,6 +214,41 @@
         }
       }
     },
+    "/v1/courses/info/{period}/{code}/teachers": {
+      "get": {
+        "description": "Get teachers teaching a given course (and their respective section)",
+        "tags": [
+          "Course Information"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "period",
+            "type": "string",
+            "description": "Period in which to index for courses",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "code",
+            "type": "string",
+            "description": "Qualified course code in \"SC-MATH-1520-3.00\" format",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved courses"
+          },
+          "404": {
+            "$ref": "#/definitions/Error"
+          },
+          "500": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
     "/v1/courses/index/periods": {
       "get": {
         "description": "Get all periods on the YorkU Course Website",
