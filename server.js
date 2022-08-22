@@ -12,13 +12,10 @@ const {rateLimit} = require('express-rate-limit');
 const fs = require("fs");
 const tools = require("./modules/tools");
 let rateLimitBlacklist = require("./private/blacklist.json");
-const cors = require("cors");
 
 app.redis = redis.createClient({"url": `redis://default:${config.password}@${config.host}:${config.port}`});
-app.use(cors())
 app.redis.connect().then(() => {
     Logger.INFO("Redis successfully connected");
-
     app.redis.keys("yorku:rmp:William*")
 })
 
@@ -44,7 +41,6 @@ const rateLimitMinute = rateLimit({
  * CORS Settings
  */
 app.options("*", (req, res) => {
-    res.header('Access-Control-Allow-Origin', "*")
     res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Authorization, Content-Length, Content-Type, X-Requested-With');
     res.send(200);
