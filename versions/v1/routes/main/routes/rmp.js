@@ -3,51 +3,57 @@ const router = express.Router();
 const tools = require("../../../../../modules/tools");
 const closestMatch = require("closest-match");
 
-async function fuzzyMatch(key, redis) {
-    let split = key.split(" ");
+async function fuzzyMatch(professor, professors) {
 
+    // Parse Name
+    let split = professor.split(" ");
     let firstName = split?.[0];
     let lastName = split?.[split.length - 1];
 
-    if (!firstName) return;
+    // Check validity
+    if (!(firstName && lastName)) return professor;
 
-    let k = `yorku:rmp:${firstName}*`;
-    if (!k) return;
+    // Calculate closest match
+    let closest = (closestMatch.closestMatch(professor, professors) || "");
 
-    let result = await redis.keys(k);
-    let closest = (closestMatch.closestMatch(key, result) || "").replace("yorku:rmp:", "");
-
-    return (closest.includes(firstName) && closest.includes(lastName)) ? closest : key;
+    // Return match if it contains our name
+    return (closest.includes(firstName) && closest.includes(lastName)) ? closest : professor;
 }
 
 
 router.post("/ratings", async (req, res) => {
 
+    // Check payload validity
     if (!req.body || !Array.isArray(req.body.professors)) {
         return res.status(400).json({"error": "Invalid payload"});
     }
 
+    // Get professor list
+    let professors = await req.app.redis.get("yorku:rmp:teachers");
+    if (!professors) return;
+    professors = JSON.parse(professors);
+
     let results = []
 
-    for (let prof of req.body.professors) {
-        let cleaned = await fuzzyMatch(tools.cleanRedis(String(prof).toUpperCase()), req.app.redis);
+    for (let professor of req.body.professors) {
 
-        let result = await req.app.redis.get(
-            ["yorku:rmp", cleaned].join(":")
-        );
-
+        // Build match
+        let match = await fuzzyMatch(professor.toUpperCase(), professors);
+        let result = await req.app.redis.get(["yorku:rmp", match].join(":"));
         let parsed;
 
+        // Parse query
         try {
             parsed = JSON.parse(result);
-            parsed["query"] = prof;
+            parsed["query"] = professor;
             parsed["status"] = 200;
         } catch (ex) {
             parsed = {};
-            parsed["query"] = cleaned;
+            parsed["query"] = match;
             parsed["status"] = 404;
         }
 
+        // Send off result
         results.push(parsed)
     }
 
