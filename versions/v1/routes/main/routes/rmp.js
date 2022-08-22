@@ -15,7 +15,7 @@ async function fuzzyMatch(key, redis) {
     if (!k) return;
 
     let result = await redis.keys(k);
-    let closest = closestMatch.closestMatch(key, result).replace("yorku:rmp:", "");
+    let closest = closestMatch.closestMatch(key, result) || "".replace("yorku:rmp:", "");
 
     return (closest.includes(firstName) && closest.includes(lastName)) ? closest : key;
 }
@@ -28,7 +28,7 @@ router.post("/ratings", async (req, res) => {
     }
 
     let results = []
-    
+
     for (let prof of req.body.professors) {
         let cleaned = await fuzzyMatch(tools.cleanRedis(String(prof).toUpperCase()), req.app.redis);
 
