@@ -22,13 +22,15 @@ const Logger = {
 class Logging {
 
     static #stringInterpolation(input, formatting) {
-        const _r=function(p,c){return p.replace(/%s/,c);}
+        const _r = function (p, c) {
+            return p.replace(/%s/, c);
+        }
         return formatting.reduce(_r, input);
     }
 
     static #parseCode(code) {
         if (!code) return "";
-        let good = code === 200
+        let good = code <= 399;
         let message;
 
         if (code <= 399) message = "OK";
