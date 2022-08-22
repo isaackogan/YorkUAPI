@@ -12,11 +12,13 @@ const {rateLimit} = require('express-rate-limit');
 const fs = require("fs");
 const tools = require("./modules/tools");
 let rateLimitBlacklist = require("./private/blacklist.json");
+const cors = require("cors");
+const ipRangeCheck = require("ip-range-check");
 
 app.redis = redis.createClient({"url": `redis://default:${config.password}@${config.host}:${config.port}`});
+app.use(cors())
 app.redis.connect().then(() => {
     Logger.INFO("Redis successfully connected");
-    app.redis.keys("yorku:rmp:William*")
 })
 
 
@@ -26,11 +28,21 @@ app.redis.connect().then(() => {
 app.set('trust proxy', 1);
 const rateLimitMinute = rateLimit({
     windowMs: 60 * 1000,
+    max: 100,
+    message: {"error": "Too many requests. Try again later."}
+});
+
+const rateLimitHour = rateLimit({
+    windowMs: 60 * 60 * 1000,
     max: (req, _) => {
-        if (rateLimitBlacklist.includes(req.ip)) {
-            return 3;
+
+        for (let range of rateLimitBlacklist["prefixes"]) {
+            if (ipRangeCheck(req.ip, range["ipv4Prefix"] || range["ipv6Prefix"])) {
+                return 1;
+            }
         }
-        return 100;
+
+        return 10000;
     },
     message: {
         "error": "Too many requests. Try again later."
@@ -41,6 +53,7 @@ const rateLimitMinute = rateLimit({
  * CORS Settings
  */
 app.options("*", (req, res) => {
+    res.header('Access-Control-Allow-Origin', "*")
     res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Authorization, Content-Length, Content-Type, X-Requested-With');
     res.send(200);
@@ -64,7 +77,7 @@ app.use('/docs', swagger.serve, swagger.setup(require("./swagger.json"), {
     customfavIcon: "/public/favicon.ico",
 }));
 app.use("/public", express.static(__dirname + "/public"));
-app.use("/v1", rateLimitMinute, v1Router);
+app.use("/v1", rateLimitMinute, rateLimitHour, v1Router);
 app.get("/", (req, res) => {
     res.redirect("/docs")
 })
