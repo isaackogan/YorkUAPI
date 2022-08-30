@@ -41,7 +41,7 @@ const rateLimitHour = rateLimit({
                 return 1;
             }
         }
-
+    
         return 10000;
     },
     message: {
