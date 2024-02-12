@@ -203,5 +203,18 @@
         }
       }
     }
+  },
+  "definitions": {
+    "Error": {
+      "properties": {
+        "error": {
+          "description": "An error has occurred.",
+          "type": "object",
+          "example": {
+            "error": "Failed to retrieve data because I'm a person, you're the API."
+          }
+        }
+      }
+    }
   }
 }
