@@ -73,7 +73,7 @@ app.use(express.urlencoded({extended: false}));
 
 app.use('/docs', swagger.serve, swagger.setup(require("./swagger.json"), {
     customCss: tools.cleanCSS(fs.readFileSync("./private/override.css", {encoding: "utf-8", flag: "r"})),
-    customSiteTitle: "YorkU Unofficial API",
+    customSiteTitle: "YorkU Course API",
     customfavIcon: "/public/favicon.ico",
 }));
 app.use("/public", express.static(__dirname + "/public"));
