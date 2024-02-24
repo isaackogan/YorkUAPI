@@ -2,8 +2,8 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "YorkU Unofficial API",
-    "description": "Open source, unofficial York University API at https://github.com/isaackogan/YorkUAPI. Data collection is not open source for ego-bruising purposes."
+    "title": "YorkU Course API",
+    "description": "Unofficial <a href=\"https://github.com/isaackogan/YorkUAPI\">York University API</a>."
   },
   "basePath": "/",
   "tags": [
@@ -14,14 +14,7 @@
     {
       "name": "Course Information",
       "description": "Information about specific courses"
-    },
-    {
-      "name": "Course Index",
-      "description": "Information from the course database index"
     }
-  ],
-  "schemes": [
-    "https"
   ],
   "consumes": [
     "application/json"
@@ -30,15 +23,15 @@
     "application/json"
   ],
   "paths": {
-    "/v1/main/home/dine-vendors": {
+    "/v1/main/api/about": {
       "get": {
-        "description": "Get information about the vendors at YorkU and their respective schedules",
         "tags": [
           "General Information"
         ],
+        "description": "Get information about this API",
         "responses": {
           "200": {
-            "description": "Successfully found dining schedules/information"
+            "description": "Successfully retrieve API information"
           },
           "404": {
             "$ref": "#/definitions/Error"
@@ -68,34 +61,6 @@
         }
       }
     },
-    "/v1/main/rmp/ratings": {
-      "get": {
-        "description": "Get the RateMyProf rating for a given YorkU Professor",
-        "tags": [
-          "General Information"
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully found YorkU Professor"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        },
-        "parameters": [
-          {
-            "in": "body",
-            "name": "professors",
-            "type": "array",
-            "description": "Array of names of the professor in \"First Last\" format",
-            "required": true
-          }
-        ]
-      }
-    },
     "/v1/main/home/building-images": {
       "get": {
         "description": "Get a building image given its code",
@@ -119,45 +84,6 @@
             "required": true
           }
         ]
-      }
-    },
-    "/v1/main/api/about": {
-      "get": {
-        "tags": [
-          "General Information"
-        ],
-        "description": "Get information about this API",
-        "responses": {
-          "200": {
-            "description": "Successfully retrieve API information"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      }
-    },
-    "/v1/courses/index/site_index": {
-      "get": {
-        "description": "Get an index of the course website at https://w2prod.sis.yorku.ca/Apps/WebObjects/cdm",
-        "tags": [
-          "Course Index"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved the course site index"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
       }
     },
     "/v1/courses/info/periods": {
@@ -261,222 +187,6 @@
             "name": "code",
             "type": "string",
             "description": "Qualified course code in \"SC-MATH-1520-3.00\" format",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved courses"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      }
-    },
-    "/v1/courses/index/periods": {
-      "get": {
-        "description": "Get all periods on the YorkU Course Website",
-        "tags": [
-          "Course Index"
-        ],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved course periods"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      }
-    },
-    "/v1/courses/index/{period}": {
-      "get": {
-        "description": "Get all courses in a given term period",
-        "tags": [
-          "Course Index"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "period",
-            "type": "string",
-            "description": "Term period in which to index for courses",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved courses"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      }
-    },
-    "/v1/courses/index/{period}/faculties": {
-      "get": {
-        "description": "Get all faculties in a given term period",
-        "tags": [
-          "Course Index"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "period",
-            "type": "string",
-            "description": "Term period in which to index for courses",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved course faculties"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      }
-    },
-    "/v1/courses/index/{period}/instructors": {
-      "get": {
-        "description": "Get all faculty for a given course period",
-        "tags": [
-          "Course Index"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "period",
-            "type": "string",
-            "description": "Term period in which to search for teachers",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved teachers"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      }
-    },
-    "/v1/courses/index/{period}/{faculty}": {
-      "get": {
-        "description": "Get all courses offered by a given faculty",
-        "tags": [
-          "Course Index"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "period",
-            "type": "string",
-            "description": "Term period in which to index for courses",
-            "required": true
-          },
-          {
-            "in": "path",
-            "name": "faculty",
-            "type": "string",
-            "description": "Faculty in which to index for courses",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved courses"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      }
-    },
-    "/v1/courses/index/{period}/{faculty}/subjects": {
-      "get": {
-        "description": "Get all subjects in a given faculty",
-        "tags": [
-          "Course Index"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "period",
-            "type": "string",
-            "description": "Term period in which to index for courses",
-            "required": true
-          },
-          {
-            "in": "path",
-            "name": "faculty",
-            "type": "string",
-            "description": "Faculty in which to index for courses",
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successfully retrieved course subjects"
-          },
-          "404": {
-            "$ref": "#/definitions/Error"
-          },
-          "500": {
-            "$ref": "#/definitions/Error"
-          }
-        }
-      }
-    },
-    "/v1/courses/index/{period}/{faculty}/{subject}": {
-      "get": {
-        "description": "Get all courses offered on a given subject",
-        "tags": [
-          "Course Index"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "period",
-            "type": "string",
-            "description": "Term period in which to index for courses",
-            "required": true
-          },
-          {
-            "in": "path",
-            "name": "faculty",
-            "type": "string",
-            "description": "Faculty in which to index for courses",
-            "required": true
-          },
-          {
-            "in": "path",
-            "name": "subject",
-            "type": "string",
-            "description": "Subject in which to index for courses",
             "required": true
           }
         ],
